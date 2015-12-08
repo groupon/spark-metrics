@@ -1,0 +1,13 @@
+dependency-reduced-pom.xml
+*.swp
+*.iml
+*.DS_Store
+.sonar/
+.idea/
+target/
+build/
+out/
+*.iml
+.classpath
+.project
+scalastyle_output.xml

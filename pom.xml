@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.groupon.dse</groupId>
+    <artifactId>spark-metrics</artifactId>
+    <packaging>jar</packaging>
+    <version>0.4-SNAPSHOT</version>
+
+    <properties>
+        <!-- Dependencies -->
+        <dropwizard.version>3.1.2</dropwizard.version>
+        <scala.compat.version>2.10</scala.compat.version>
+        <spark.version>1.5.2</spark.version>
+        <jetty.version>8.1.14.v20131031</jetty.version>
+        <scalatest.version>2.2.4</scalatest.version>
+
+        <!-- Plugins -->
+        <dep.plugin.scalatest-maven-plugin.version>1.0</dep.plugin.scalatest-maven-plugin.version>
+        <dep.plugin.scalastyle-maven-plugin.version>0.6.0</dep.plugin.scalastyle-maven-plugin.version>
+
+        <!-- Basepom Overrides -->
+        <dep.scala.version>2.10.4</dep.scala.version>
+        <dep.plugin.scala.version>3.2.2</dep.plugin.scala.version>
+        <basepom.release.push-changes>true</basepom.release.push-changes>
+        <basepom.check.fail-duplicate-finder>false</basepom.check.fail-duplicate-finder>
+        <basepom.check.fail-findbugs>false</basepom.check.fail-findbugs>
+        <project.build.targetJdk>1.7</project.build.targetJdk>
+    </properties>
+
+    <parent>
+        <groupId>org.basepom</groupId>
+        <artifactId>basepom-foundation</artifactId>
+        <version>16</version>
+    </parent>
+
+    <scm>
+        <connection>scm:git:git@github.com:groupon/spark-metrics</connection>
+        <developerConnection>scm:git:git@github.com:groupon/spark-metrics</developerConnection>
+        <url>https://github.com/groupon/spark-metrics</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile-first</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-scaladocs</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>doc-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                    <scalaVersion>${dep.scala.version}</scalaVersion>
+                    <scalaCompatVersion>${scala.compat.version}</scalaCompatVersion>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>${dep.plugin.scalatest-maven-plugin.version}</version>
+                <configuration>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <junitxml>.</junitxml>
+                    <filereports>WDF TestSuite.txt</filereports>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.scalastyle</groupId>
+                <artifactId>scalastyle-maven-plugin</artifactId>
+                <version>${dep.plugin.scalastyle-maven-plugin.version}</version>
+                <configuration>
+                    <verbose>false</verbose>
+                    <failOnViolation>true</failOnViolation>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                    <failOnWarning>false</failOnWarning>
+                    <sourceDirectory>src/main/scala</sourceDirectory>
+                    <testSourceDirectory>src/test/scala</testSourceDirectory>
+                    <configLocation>src/main/resources/scalastyle_config.xml</configLocation>
+                    <outputFile>scalastyle_output.xml</outputFile>
+                    <outputEncoding>UTF-8</outputEncoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${dropwizard.version}</version>
+            <exclusions>
+                <!--
+                [ERROR] Found a problem with the dependency org.slf4j:slf4j-api
+                  Resolved version is 1.7.7
+                  Version 1.7.10 was expected by artifacts: org.apache.spark:spark-core_2.10, org.apache.spark:spark-streaming_2.10
+                  Version 1.7.7 was expected by artifact: io.dropwizard.metrics:metrics-core
+                -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.10</artifactId>
+            <version>${spark.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming_2.10</artifactId>
+            <version>${spark.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${dep.scala.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
+        We need to include this for some reason because of the way we fake the Spark package namespace.
+        Jetty version is taken from the pom file for Spark ${spark.version}
+        -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.10</artifactId>
+            <version>${scalatest.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
