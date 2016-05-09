@@ -5,7 +5,46 @@
     <groupId>com.groupon.dse</groupId>
     <artifactId>spark-metrics</artifactId>
     <packaging>jar</packaging>
-    <version>0.4-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A library to expose more of Apache Spark's metrics system</description>
+    <url>https://github.com/groupon/spark-metrics</url>
+
+    <licenses>
+        <license>
+            <name>The BSD 3-Clause License</name>
+            <url>https://opensource.org/licenses/BSD-3-Clause</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Atsunori Kakitani</name>
+            <email>atkakitani@groupon.com</email>
+            <organization>Groupon</organization>
+            <organizationUrl>http://www.groupon.com</organizationUrl>
+        </developer>
+        <developer>
+            <id>Rakesh Nair</id>
+            <email>rakesh@groupon.com</email>
+            <organization>Groupon</organization>
+            <organizationUrl>http://www.groupon.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:groupon/spark-metrics.git</connection>
+        <developerConnection>scm:git:git@github.com:groupon/spark-metrics.git</developerConnection>
+        <url>https://github.com/groupon/spark-metrics</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <parent>
+        <groupId>org.basepom</groupId>
+        <artifactId>basepom-foundation</artifactId>
+        <version>16</version>
+    </parent>
 
     <properties>
         <!-- Dependencies -->
@@ -27,19 +66,6 @@
         <basepom.check.fail-findbugs>false</basepom.check.fail-findbugs>
         <project.build.targetJdk>1.7</project.build.targetJdk>
     </properties>
-
-    <parent>
-        <groupId>org.basepom</groupId>
-        <artifactId>basepom-foundation</artifactId>
-        <version>16</version>
-    </parent>
-
-    <scm>
-        <connection>scm:git:git@github.com:groupon/spark-metrics</connection>
-        <developerConnection>scm:git:git@github.com:groupon/spark-metrics</developerConnection>
-        <url>https://github.com/groupon/spark-metrics</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <build>
         <plugins>
