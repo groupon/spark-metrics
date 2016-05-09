@@ -1,6 +1,6 @@
 #spark-metrics
 
-A library to expose more of Spark's metrics system. This library allows you to use APIs like the [Dropwizard/Codahale Metrics](http://metrics.dropwizard.io/3.1.0/) library on Spark applications to publish metrics that are aggregated across all executors.
+A library to expose more of [Apache Spark](http://spark.apache.org/)'s metrics system. This library allows you to use APIs like the [Dropwizard/Codahale Metrics](http://metrics.dropwizard.io/3.1.0/) library on Spark applications to publish metrics that are aggregated across all executors.
 
 
 ## Dependencies
@@ -9,7 +9,7 @@ To use this library, add a dependency to `spark-metrics` in your project:
 <dependency>
     <groupId>com.groupon.dse</groupId>
     <artifactId>spark-metrics</artifactId>
-    <version>0.3</version>
+    <version>1.0</version>
 </dependency>
 ```
 
