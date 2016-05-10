@@ -53,8 +53,8 @@
 
     <parent>
         <groupId>org.basepom</groupId>
-        <artifactId>basepom-foundation</artifactId>
-        <version>16</version>
+        <artifactId>basepom-oss</artifactId>
+        <version>18</version>
     </parent>
 
     <properties>
@@ -75,6 +75,7 @@
         <basepom.release.push-changes>true</basepom.release.push-changes>
         <basepom.check.fail-duplicate-finder>false</basepom.check.fail-duplicate-finder>
         <basepom.check.fail-findbugs>false</basepom.check.fail-findbugs>
+        <basepom.oss.skip-scala-doc>false</basepom.oss.skip-scala-doc>
         <project.build.targetJdk>1.7</project.build.targetJdk>
     </properties>
 
@@ -174,6 +175,29 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/pom.xml</exclude>
+                            <exclude>**/scalastyle_config.xml</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${dep.plugin.release.version}</version>
+                    <configuration>
+                        <useReleaseProfile>true</useReleaseProfile>
+                        <releaseProfiles>basepom.oss-release</releaseProfiles>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencies>
