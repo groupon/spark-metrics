@@ -61,16 +61,16 @@
         <!-- Dependencies -->
         <dropwizard.version>3.1.2</dropwizard.version>
         <scala.compat.version>2.10</scala.compat.version>
-        <spark.version>1.5.2</spark.version>
+        <spark.version>2.0.1</spark.version>
         <jetty.version>8.1.14.v20131031</jetty.version>
-        <scalatest.version>2.2.4</scalatest.version>
+        <scalatest.version>2.2.6</scalatest.version>
 
         <!-- Plugins -->
         <dep.plugin.scalatest-maven-plugin.version>1.0</dep.plugin.scalatest-maven-plugin.version>
         <dep.plugin.scalastyle-maven-plugin.version>0.6.0</dep.plugin.scalastyle-maven-plugin.version>
 
         <!-- Basepom Overrides -->
-        <dep.scala.version>2.10.4</dep.scala.version>
+        <dep.scala.version>2.10.6</dep.scala.version>
         <dep.plugin.scala.version>3.2.2</dep.plugin.scala.version>
         <basepom.release.push-changes>true</basepom.release.push-changes>
         <basepom.check.fail-duplicate-finder>false</basepom.check.fail-duplicate-finder>
