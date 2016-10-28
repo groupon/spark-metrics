@@ -167,7 +167,7 @@ private[metrics] class MetricsReceiver(val sparkContext: SparkContext,
    * @param metric [[Metric]] instance to be published
    */
   def registerMetricSource(metricName: String, metric: Metric): Unit =  {
-    sparkContext.metricsSystem.registerSource(
+    sparkContext.env.metricsSystem.registerSource(
       new Source {
         override val sourceName = s"${sparkContext.appName}.$metricNamespace"
         override def metricRegistry: MetricRegistry = {
