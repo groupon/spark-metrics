@@ -2,19 +2,35 @@
 
 A library to expose more of [Apache Spark](http://spark.apache.org/)'s metrics system. This library allows you to use APIs like the [Dropwizard/Codahale Metrics](http://metrics.dropwizard.io/3.1.0/) library on Spark applications to publish metrics that are aggregated across all executors.
 
-
 ## Dependencies
-To use this library, add a dependency to `spark-metrics` in your project:
+
+### Spark 2.x
+`spark-metrics` by default will be targeting the Spark 2.x line of releases. To use this library for a Spark 2.x application, add the following dependency:
+
 ```xml
 <dependency>
     <groupId>com.groupon.dse</groupId>
     <artifactId>spark-metrics</artifactId>
-    <version>1.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
-This library is currently built for **Spark 1.5.2**, but is also compatible with 1.4.1. This is important to note because this library uses Spark's internal APIs, and compatibility with other major Spark versions has not been fully tested.
+Note that `spark-metrics` targets Scala 2.11 by default, as that is the default Scala version supported by Spark 2.x. To support Scala 2.10 on the Spark 2.x releases, this library will need to be recompiled with the Spark dependencies that target Scala 2.10.
 
+### Spark 1.x
+To use this library with the Spark 1.x line of releases, add a dependency to `spark-metrics_spark-1.x` instead:
+
+```xml
+<dependency>
+    <groupId>com.groupon.dse</groupId>
+    <artifactId>spark-metrics_spark-1.x</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
+The default Spark version targeted for `spark-metrics_spark-1.x` is Spark 1.6.3, but it is compatible with 1.5 and 1.4 as well. Note that `spark-metrics_spark-1.x` targets Scala 2.10 by default, as that is the default Scala version supported by Spark 1.x. To support Scala 2.11 on the Spark 1.x releases, this library will need to be recompiled with the Spark dependencies that target Scala 2.11.
+
+Updates to `spark-metrics` will be backported to `spark-metrics_spark-1.x` whenever possible, but support for `spark-metrics_spark-1.x` will be discontinued at some point in the future.
 
 ## Usage
 Include this import in your main Spark application file:
