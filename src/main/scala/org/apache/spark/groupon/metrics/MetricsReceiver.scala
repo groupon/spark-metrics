@@ -114,45 +114,65 @@ private[metrics] class MetricsReceiver(val sparkContext: SparkContext,
 
   def getOrCreateCounter(metricName: String): Counter = {
     metrics.getOrElseUpdate(metricName, {
-      val counter = new Counter()
-      registerMetricSource(metricName, counter)
-      counter
+      metrics.synchronized {
+        metrics.getOrElse(metricName, {
+          val counter = new Counter()
+          registerMetricSource(metricName, counter)
+          counter
+        })
+      }
     }).asInstanceOf[Counter]
   }
 
   def getOrCreateHistogram(metricName: String, reservoirClass: Class[_ <: Reservoir]): Histogram = {
     metrics.getOrElseUpdate(metricName, {
-      val histogram = new Histogram(reservoirClass.newInstance())
-      registerMetricSource(metricName, histogram)
-      histogram
+      metrics.synchronized {
+        metrics.getOrElse(metricName, {
+          val histogram = new Histogram(reservoirClass.newInstance())
+          registerMetricSource(metricName, histogram)
+          histogram
+        })
+      }
     }).asInstanceOf[Histogram]
   }
 
   def getOrCreateMeter(metricName: String): Meter = {
     metrics.getOrElseUpdate(metricName, {
-      val meter = new Meter()
-      registerMetricSource(metricName, meter)
-      meter
+      metrics.synchronized {
+        metrics.getOrElse(metricName, {
+          val meter = new Meter()
+          registerMetricSource(metricName, meter)
+          meter
+        })
+      }
     }).asInstanceOf[Meter]
   }
 
   def getOrCreateTimer(metricName: String, reservoirClass: Class[_ <: Reservoir], clockClass: Class[_ <: Clock]): Timer = {
     metrics.getOrElseUpdate(metricName, {
-      val timer = new Timer(reservoirClass.newInstance(), clockClass.newInstance())
-      registerMetricSource(metricName, timer)
-      timer
+      metrics.synchronized {
+        metrics.getOrElse(metricName, {
+          val timer = new Timer(reservoirClass.newInstance(), clockClass.newInstance())
+          registerMetricSource(metricName, timer)
+          timer
+        })
+      }
     }).asInstanceOf[Timer]
   }
 
   def getOrCreateGauge(metricName: String): Gauge[AnyVal] = {
     metrics.getOrElseUpdate(metricName, {
-      val gauge = new Gauge[AnyVal] {
-        override def getValue: AnyVal = {
-          lastGaugeValues.get(metricName).get
-        }
+      metrics.synchronized {
+        metrics.getOrElse(metricName, {
+          val gauge = new Gauge[AnyVal] {
+            override def getValue: AnyVal = {
+              lastGaugeValues(metricName)
+            }
+          }
+          registerMetricSource(metricName, gauge)
+          gauge
+        })
       }
-      registerMetricSource(metricName, gauge)
-      gauge
     }).asInstanceOf[Gauge[AnyVal]]
   }
 
