@@ -32,7 +32,6 @@
 
 package org.apache.spark.groupon.metrics
 
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 import com.codahale.metrics.{Clock, Counter, Gauge, Histogram, Meter, Metric, MetricRegistry, Reservoir, Timer}
@@ -40,7 +39,6 @@ import org.apache.spark.{SparkContext, SparkException}
 import org.apache.spark.rpc.RpcEndpoint
 
 import scala.collection.concurrent
-import scala.collection.JavaConverters.mapAsScalaConcurrentMapConverter
 
 /**
  * MetricsReceiver is an [[RpcEndpoint]] on the driver node that collects data points for metrics from all the executors
@@ -82,9 +80,9 @@ private[metrics] class MetricsReceiver(val sparkContext: SparkContext,
   override val rpcEnv = sparkContext.env.rpcEnv
 
   // Tracks the last observed value for each Gauge
-  val lastGaugeValues: concurrent.Map[String, AnyVal] = new ConcurrentHashMap[String, AnyVal]().asScala
+  val lastGaugeValues: concurrent.Map[String, AnyVal] = concurrent.TrieMap[String, AnyVal]()
   // Keeps track of all the Metric instances that are being published
-  val metrics: concurrent.Map[String, Metric] = new ConcurrentHashMap[String, Metric]().asScala
+  val metrics: concurrent.Map[String, Metric] = concurrent.TrieMap[String, Metric]()
 
   /**
    * Handle the data points pushed from the executors.
@@ -166,7 +164,7 @@ private[metrics] class MetricsReceiver(val sparkContext: SparkContext,
    * @param metricName name of the Metric
    * @param metric [[Metric]] instance to be published
    */
-  def registerMetricSource(metricName: String, metric: Metric): Unit =  {
+  def registerMetricSource(metricName: String, metric: Metric): Unit = synchronized {
     sparkContext.env.metricsSystem.registerSource(
       new Source {
         override val sourceName = s"${sparkContext.appName}.$metricNamespace"
