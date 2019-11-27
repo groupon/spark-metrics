@@ -101,6 +101,10 @@ class SparkGauge private[metrics] (
   def set(value: AnyVal): Unit = {
     sendMetric(GaugeMessage(metricName, value))
   }
+
+  def remove(): Unit = {
+    sendMetric(Remove(metricName, "".asInstanceOf[AnyVal]))
+  }
 }
 
 /**
@@ -128,6 +132,10 @@ class SparkHistogram private[metrics] (
    */
   def update(value: Int): Unit = {
     update(value.toLong)
+  }
+
+  def remove(): Unit = {
+    sendMetric(Remove(metricName, "".asInstanceOf[AnyVal]))
   }
 }
 

@@ -70,3 +70,8 @@ private[metrics] case class TimerMessage(
     reservoirClass: Class[_ <: Reservoir],
     clockClass: Class[_ <: Clock])
   extends MetricMessage
+
+private[metrics] case class Remove(
+    override val metricName: String,
+    override val value: AnyVal)
+  extends MetricMessage
